@@ -113,6 +113,9 @@ void Grid::onMouseButtonPressedRight(sf::RenderWindow& window)
 		else
 			type = 0;
 
+		if (tiles[tile.x][tile.y].type > 0)
+			type = 0;
+
 		colorTile(tile, type);
 	}
 }
