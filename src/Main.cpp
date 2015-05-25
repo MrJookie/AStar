@@ -17,7 +17,7 @@ int main()
 
 	sf::Clock clock;
 
-	Grid grid(windowSize, 16, 16);
+	Grid grid(windowSize, 32, 32);
 
 	while (window.isOpen())
 	{
@@ -34,9 +34,14 @@ int main()
 						window.close();
 						break;
 					}
-					if (event.key.code == sf::Keyboard::Space)
+					if (event.key.code == sf::Keyboard::R)
 					{
 						grid.reset();
+						break;
+					}
+					if (event.key.code == sf::Keyboard::S)
+					{
+						grid.startPathfinding();
 						break;
 					}
 				case sf::Event::MouseButtonPressed: grid.onMouseButtonPressedRight(window);
@@ -49,6 +54,8 @@ int main()
 		{
 			grid.onMouseButtonPressedLeft(window);
 		}
+
+		grid.recalculateCosts();
 
 		sf::Time elapsed = clock.restart();
 		float dt = elapsed.asSeconds();

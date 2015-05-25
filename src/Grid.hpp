@@ -2,21 +2,17 @@
 #include <iostream>
 #include <vector>
 
-#include "Pathfinding.hpp"
+enum Type { EMPTY, OBSTACLE, START, FINISH };
 
 class Tile
 {
 public:
+	Type type;
 	sf::Vertex* quad;
-
-	/*
-	type:
-	0 = empty
-	1 = obstacle
-	2 = start
-	3 = finish
-	*/
-	std::size_t type;
+	sf::Vector2i position;
+	sf::Text textG; //movement cost
+	sf::Text textH; //heuristic distance
+	sf::Text textF; //F = G + H
 };
 
 class Grid : public sf::Drawable, public sf::Transformable
@@ -26,20 +22,25 @@ public:
 	void reset();
 	void onMouseButtonPressedLeft(sf::RenderWindow& window);
 	void onMouseButtonPressedRight(sf::RenderWindow& window);
-	
-	std::vector<std::vector<Tile>> tiles;
-	 
+	void startPathfinding();
+	void recalculateCosts();
+
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 private:
+	sf::Font font;
+
 	std::size_t width;
 	std::size_t height;
 	std::size_t tileWidth;
 	std::size_t tileHeight;
-
 	sf::VertexArray vertices;
+	sf::Vector2i startTilePosition;
+	sf::Vector2i finishTilePosition;
+	std::vector<std::vector<Tile>> tiles;
 
-	void colorTile(sf::Vector2i tile, std::size_t type);
+	sf::Color Grid::pickTileColor(Type type);
+	void colorTile(sf::Vector2i tile, Type type);
 
-	Pathfinding pathfinding;
+	int heuristicManhattan(sf::Vector2i startTilePosition, sf::Vector2i finishTilePosition);
 };
