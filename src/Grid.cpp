@@ -32,8 +32,10 @@ tileHeight(tileHeight)
 			quad[3].position = sf::Vector2f((x + 0) * tileWidth + 1, (y + 1) * tileHeight + 0);
 
 			tiles[x][y].type = Type::EMPTY;
+			tiles[x][y].status = Status::OPENED;
 			tiles[x][y].quad = quad;
 			tiles[x][y].position = sf::Vector2i(x, y);
+			tiles[x][y].Fvalue = 0;
 
 			tiles[x][y].textG.setFont(font);
 			tiles[x][y].textG.setCharacterSize(10u);
@@ -81,6 +83,8 @@ void Grid::reset()
 		for (std::size_t y = 0; y < height; ++y)
 		{
 			tiles[x][y].type = Type::EMPTY;
+			tiles[x][y].status = Status::OPENED;
+			tiles[x][y].Fvalue = 0;
 
 			tiles[x][y].textG.setString("");
 			tiles[x][y].textH.setString("");
@@ -217,7 +221,83 @@ void Grid::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 void Grid::startPathfinding()
 {
-	std::cout << heuristicManhattan(startTilePosition, finishTilePosition) << std::endl;
+	//std::unordered_map<Tile, Tile> cameFrom;
+	//std::unordered_map<Tile, int> costSoFar;
+	//findPath(cameFrom, costSoFar);
+
+	//start: tiles[5][14]
+	//finish: tiles[15][14]
+
+	addToOpenList(tiles[5][14], 0);
+	addToOpenList(tiles[5][15], 1);
+
+	//while (openList.size() > 0)
+	{
+		Tile tile;
+		tile = findLeastF();
+		addToClosedList(tile);
+
+		//addToOpenList(tiles[5][15], 10);
+	}
+
+	std::cout << "openList" << std::endl;
+	for (auto& openListTile : openList)
+	{
+		std::cout << openListTile.Fvalue << std::endl;
+	}
+
+	std::cout << "closedList" << std::endl;
+	for (auto& closedListTile : closedList)
+	{
+		std::cout << closedListTile.Fvalue << std::endl;
+	}
+
+	//std::cout << calculateHeuristicManhattan(startTilePosition, finishTilePosition) << std::endl;
+}
+
+void Grid::addToOpenList(Tile tile, int Fvalue)
+{
+	tile.Fvalue = Fvalue;
+	openList.push_back(tile);
+
+	tiles[tile.position.x][tile.position.y].status = Status::CLOSED;
+}
+
+void Grid::addToClosedList(Tile tile)
+{
+	//insert into closedList
+	closedList.push_back(tile);
+
+	//remove from openList
+	std::vector<Tile>::iterator position = std::find(openList.begin(), openList.end(), tile);
+	if (position != openList.end())
+	{
+		openList.erase(position);
+	}
+}
+
+Tile Grid::findLeastF()
+{
+	//calculateHeuristicManhattan(startTilePosition, finishTilePosition);
+
+	Tile tile;
+	tile.Fvalue = 0;
+
+	if (openList.size() > 0)
+		tile = openList[0];
+
+	for (auto& openListTile : openList)
+	{
+		if (openListTile.Fvalue < tile.Fvalue)
+			tile = openListTile;
+	}
+
+	return tile;
+}
+
+int Grid::calculateMovementCost(sf::Vector2i tile)
+{
+
 }
 
 void Grid::recalculateCosts()
@@ -238,7 +318,7 @@ void Grid::recalculateCosts()
 	//tiles[startTilePosition.x][startTilePosition.y].textH.setString("H:" + std::to_string(heuristicManhattan(startTilePosition, finishTilePosition)));
 }
 
-int Grid::heuristicManhattan(sf::Vector2i startTilePosition, sf::Vector2i finishTilePosition)
+int Grid::calculateHeuristicManhattan(sf::Vector2i startTilePosition, sf::Vector2i finishTilePosition)
 {
 	return abs(startTilePosition.x - finishTilePosition.x) + abs(startTilePosition.y - finishTilePosition.y);
 }
