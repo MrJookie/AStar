@@ -1,29 +1,32 @@
-﻿Build started 29. 5. 2015 17:52:32.
+﻿Build started 29.5.2015 22:35:06.
      1>Project "C:\Users\admin\Documents\GitHub\AStar\AStar.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\Users\admin\Documents\GitHub\AStar\\include /Zi /nologo /W3 /WX- /O2 /Ob2 /Oi /Ot /Oy- /GL /D SFML_STATIC /D WIN32 /D NDEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt src\Grid.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\Users\admin\Documents\GitHub\AStar\\include /Zi /nologo /W3 /WX- /O2 /Ob2 /Oi /Ot /Oy- /GL /D SFML_STATIC /D WIN32 /D NDEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt src\Grid.cpp src\Main.cpp
          Grid.cpp
      1>src\Grid.cpp(13): warning C4018: '<' : signed/unsigned mismatch
      1>src\Grid.cpp(27): warning C4244: 'argument' : conversion from 'size_t' to 'float', possible loss of data
      1>src\Grid.cpp(28): warning C4244: 'argument' : conversion from 'size_t' to 'float', possible loss of data
      1>src\Grid.cpp(29): warning C4244: 'argument' : conversion from 'size_t' to 'float', possible loss of data
      1>src\Grid.cpp(30): warning C4244: 'argument' : conversion from 'size_t' to 'float', possible loss of data
-     1>src\Grid.cpp(90): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>src\Grid.cpp(99): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>src\Grid.cpp(155): warning C4018: '>=' : signed/unsigned mismatch
+     1>src\Grid.cpp(92): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>src\Grid.cpp(101): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>src\Grid.cpp(157): warning C4018: '>=' : signed/unsigned mismatch
      1>src\Grid.cpp(227): warning C4018: '<' : signed/unsigned mismatch
-     1>src\Grid.cpp(240): warning C4018: '<' : signed/unsigned mismatch
      1>src\Grid.cpp(241): warning C4018: '<' : signed/unsigned mismatch
+     1>src\Grid.cpp(242): warning C4018: '<' : signed/unsigned mismatch
+     1>src\Grid.cpp(283): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+         Main.cpp
+     1>src\Main.cpp(55): warning C4551: function call missing argument list
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\admin\Documents\GitHub\AStar\Release\AStar.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:C:\Users\admin\Documents\GitHub\AStar\\lib "sfml-main.lib" "sfml-system-s.lib" winmm.lib "sfml-audio-s.lib" flac.lib ogg.lib vorbis.lib vorbisenc.lib vorbisfile.lib openal32.lib opengl32.lib gdi32.lib "sfml-graphics-s.lib" "sfml-window-s.lib" freetype.lib jpeg.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\admin\Documents\GitHub\AStar\Release\AStar.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\admin\Documents\GitHub\AStar\Release\AStar.lib" /MACHINE:X86 /SAFESEH Release\Grid.obj
          Release\Main.obj
          Release\Micropather.obj
          Generating code
-     1>c:\users\admin\documents\github\astar\src\grid.cpp(151): warning C4715: 'Grid::pickTileColor' : not all control paths return a value
+     1>c:\users\admin\documents\github\astar\src\grid.cpp(153): warning C4715: 'Grid::pickTileColor' : not all control paths return a value
          Finished generating code
          AStar.vcxproj -> C:\Users\admin\Documents\GitHub\AStar\Release\AStar.exe
      1>Done Building Project "C:\Users\admin\Documents\GitHub\AStar\AStar.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:04.90
+Time Elapsed 00:00:01.92

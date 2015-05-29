@@ -55,6 +55,8 @@ tileHeight(tileHeight)
 
 	//finish
 	colorTile(sf::Vector2i(15, 14), Type::FINISH);
+
+	pather = new micropather::MicroPather(this, 20);
 }
 
 Grid::~Grid() {
@@ -215,14 +217,12 @@ void Grid::startPathfinding()
 			}
 		}
 	}
-
-	pather = new micropather::MicroPather(this);
-
+	
 	float totalCost = 0;
 	int result = pather->Solve(XYToNode(startTilePosition.x, startTilePosition.y), XYToNode(finishTilePosition.x, finishTilePosition.y), &path, &totalCost);
 
 	//if (result == micropather::MicroPather::SOLVED)
-	//	std::cout << "solved!" << std::endl;
+	//	std::cout << "totalCost: " << totalCost << std::endl;
 
 	for (int i = 0; i < path.size(); ++i)
 	{
@@ -237,12 +237,14 @@ void Grid::startPathfinding()
 
 int Grid::Passable(int nx, int ny)
 {
+	//fix this
 	if (nx >= 0 && nx < width &&
-		ny >= 0 && ny < height)
+		ny >= 0 && ny < height && nx - 1 >= 0 && ny - 1 >= 0)
 	{
-		if (tiles[nx][ny].type != Type::OBSTACLE)
+		if (tiles[nx][ny].type != Type::OBSTACLE && tiles[nx - 1][ny].type != Type::OBSTACLE && tiles[nx][ny-1].type != Type::OBSTACLE)
 			return 1;
 	}
+
 	return 0;
 }
 
@@ -260,17 +262,7 @@ void* Grid::XYToNode(int x, int y)
 
 float Grid::LeastCostEstimate(void* nodeStart, void* nodeEnd)
 {
-	int xStart, yStart, xEnd, yEnd;
-	NodeToXY(nodeStart, &xStart, &yStart);
-	NodeToXY(nodeEnd, &xEnd, &yEnd);
-
-	/* Compute the minimum path cost using distance measurement. It is possible
-	to compute the exact minimum path using the fact that you can move only
-	on a straight line or on a diagonal, and this will yield a better result.
-	*/
-	int dx = xStart - xEnd;
-	int dy = yStart - yEnd;
-	return (float)sqrt((double)(dx*dx) + (double)(dy*dy));
+	return 0.0;
 }
 
 void Grid::AdjacentCost(void* node, micropather::MPVector<micropather::StateCost>* neighbors)
@@ -278,7 +270,7 @@ void Grid::AdjacentCost(void* node, micropather::MPVector<micropather::StateCost
 	int x, y;
 	const int dx[8] = { 1, 1, 0, -1, -1, -1, 0, 1 };
 	const int dy[8] = { 0, 1, 1, 1, 0, -1, -1, -1 };
-	const float cost[8] = { 1.0f, 1.41f, 1.0f, 1.41f, 1.0f, 1.41f, 1.0f, 1.41f };
+	const int cost[8] = { 10, 14, 10, 14, 10, 14, 10, 14 };
 
 	NodeToXY(node, &x, &y);
 
@@ -288,18 +280,8 @@ void Grid::AdjacentCost(void* node, micropather::MPVector<micropather::StateCost
 
 		int pass = Passable(nx, ny);
 		if (pass > 0) {
-			if (pass == 1)
-			{
-				// Normal floor
-				micropather::StateCost nodeCost = { XYToNode(nx, ny), cost[i] };
-				neighbors->push_back(nodeCost);
-			}
-			else
-			{
-				// Normal floor
-				micropather::StateCost nodeCost = { XYToNode(nx, ny), FLT_MAX };
-				neighbors->push_back(nodeCost);
-			}
+			micropather::StateCost nodeCost = { XYToNode(nx, ny), cost[i] };
+			neighbors->push_back(nodeCost);
 		}
 	}
 }
