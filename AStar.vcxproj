@@ -13,9 +13,11 @@
   <ItemGroup>
     <ClCompile Include="src\Grid.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\Micropather\Micropather.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Grid.hpp" />
+    <ClInclude Include="src\Micropather\Micropather.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8C0F52AA-F82B-49AC-8FA7-04A1C7CC4C33}</ProjectGuid>

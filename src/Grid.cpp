@@ -6,8 +6,6 @@ height(windowSize.y / tileWidth),
 tileWidth(tileWidth),
 tileHeight(tileHeight)
 {
-	font.loadFromFile("Sansation.ttf");
-
 	vertices.setPrimitiveType(sf::Quads);
 	vertices.resize(width * height * 4);
 
@@ -32,25 +30,8 @@ tileHeight(tileHeight)
 			quad[3].position = sf::Vector2f((x + 0) * tileWidth + 1, (y + 1) * tileHeight + 0);
 
 			tiles[x][y].type = Type::EMPTY;
-			tiles[x][y].status = Status::OPENED;
 			tiles[x][y].quad = quad;
 			tiles[x][y].position = sf::Vector2i(x, y);
-			tiles[x][y].Fvalue = 0;
-
-			tiles[x][y].textG.setFont(font);
-			tiles[x][y].textG.setCharacterSize(10u);
-			tiles[x][y].textG.setColor(sf::Color(0, 0, 0, 255));
-			tiles[x][y].textG.setPosition(x * tileWidth + 2, y * tileHeight + 1);
-
-			tiles[x][y].textH.setFont(font);
-			tiles[x][y].textH.setCharacterSize(10u);
-			tiles[x][y].textH.setColor(sf::Color(0, 0, 0, 255));
-			tiles[x][y].textH.setPosition(x * tileWidth + 2, y * tileHeight + 11);
-
-			tiles[x][y].textF.setFont(font);
-			tiles[x][y].textF.setCharacterSize(10u);
-			tiles[x][y].textF.setColor(sf::Color(0, 0, 0, 255));
-			tiles[x][y].textF.setPosition(x * tileWidth + 2, y * tileHeight + 21);
 		}
 	}
 
@@ -76,6 +57,10 @@ tileHeight(tileHeight)
 	colorTile(sf::Vector2i(15, 14), Type::FINISH);
 }
 
+Grid::~Grid() {
+	delete pather;
+}
+
 void Grid::reset()
 {
 	for (std::size_t x = 0; x < width; ++x)
@@ -83,12 +68,6 @@ void Grid::reset()
 		for (std::size_t y = 0; y < height; ++y)
 		{
 			tiles[x][y].type = Type::EMPTY;
-			tiles[x][y].status = Status::OPENED;
-			tiles[x][y].Fvalue = 0;
-
-			tiles[x][y].textG.setString("");
-			tiles[x][y].textH.setString("");
-			tiles[x][y].textF.setString("");
 
 			tiles[x][y].quad[0].color = pickTileColor(Type::EMPTY);
 			tiles[x][y].quad[1].color = pickTileColor(Type::EMPTY);
@@ -96,6 +75,13 @@ void Grid::reset()
 			tiles[x][y].quad[3].color = pickTileColor(Type::EMPTY);
 		}
 	}
+
+	path.resize(0);
+
+	startTilePosition.x = 0;
+	startTilePosition.y = 0;
+	finishTilePosition.x = 0;
+	finishTilePosition.y = 0;
 }
 
 void Grid::onMouseButtonPressedLeft(sf::RenderWindow& window)
@@ -158,6 +144,9 @@ sf::Color Grid::pickTileColor(Type type)
 	case Type::FINISH:
 		return sf::Color(51, 102, 204, 255);
 		break;
+	case Type::PATH:
+		return sf::Color(255, 0, 0, 255);
+		break;
 	}
 }
 
@@ -179,17 +168,19 @@ void Grid::colorTile(sf::Vector2i tile, Type type)
 
 	if (tiles[tile.x][tile.y].type == Type::START)
 	{
-		tiles[tile.x][tile.y].type == Type::EMPTY;
 		type = Type::EMPTY;
 		startTilePosition.x = 0;
 		startTilePosition.y = 0;
 	}
 	else if (tiles[tile.x][tile.y].type == Type::FINISH)
 	{
-		tiles[tile.x][tile.y].type == Type::EMPTY;
 		type = Type::EMPTY;
 		finishTilePosition.x = 0;
 		finishTilePosition.y = 0;
+	}
+	else if (type == Type::PATH)
+	{
+		type = Type::PATH;
 	}
 
 	tiles[tile.x][tile.y].type = type;
@@ -205,120 +196,114 @@ void Grid::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	//draw tiles
 	states.transform *= getTransform();
 	target.draw(vertices, states);
-
-	//draw texts
-	//draw for expanded tiles
-	for (std::size_t x = 0; x < width; ++x)
-	{
-		for (std::size_t y = 0; y < height; ++y)
-		{
-			target.draw(tiles[x][y].textG, states);
-			target.draw(tiles[x][y].textH, states);
-			target.draw(tiles[x][y].textF, states);
-		}
-	}
 }
 
 void Grid::startPathfinding()
 {
-	//std::unordered_map<Tile, Tile> cameFrom;
-	//std::unordered_map<Tile, int> costSoFar;
-	//findPath(cameFrom, costSoFar);
-
-	//start: tiles[5][14]
-	//finish: tiles[15][14]
-
-	addToOpenList(tiles[5][14], 0);
-	addToOpenList(tiles[5][15], 1);
-
-	//while (openList.size() > 0)
-	{
-		Tile tile;
-		tile = findLeastF();
-		addToClosedList(tile);
-
-		//addToOpenList(tiles[5][15], 10);
-	}
-
-	std::cout << "openList" << std::endl;
-	for (auto& openListTile : openList)
-	{
-		std::cout << openListTile.Fvalue << std::endl;
-	}
-
-	std::cout << "closedList" << std::endl;
-	for (auto& closedListTile : closedList)
-	{
-		std::cout << closedListTile.Fvalue << std::endl;
-	}
-
-	//std::cout << calculateHeuristicManhattan(startTilePosition, finishTilePosition) << std::endl;
-}
-
-void Grid::addToOpenList(Tile tile, int Fvalue)
-{
-	tile.Fvalue = Fvalue;
-	openList.push_back(tile);
-
-	tiles[tile.position.x][tile.position.y].status = Status::CLOSED;
-}
-
-void Grid::addToClosedList(Tile tile)
-{
-	//insert into closedList
-	closedList.push_back(tile);
-
-	//remove from openList
-	std::vector<Tile>::iterator position = std::find(openList.begin(), openList.end(), tile);
-	if (position != openList.end())
-	{
-		openList.erase(position);
-	}
-}
-
-Tile Grid::findLeastF()
-{
-	//calculateHeuristicManhattan(startTilePosition, finishTilePosition);
-
-	Tile tile;
-	tile.Fvalue = 0;
-
-	if (openList.size() > 0)
-		tile = openList[0];
-
-	for (auto& openListTile : openList)
-	{
-		if (openListTile.Fvalue < tile.Fvalue)
-			tile = openListTile;
-	}
-
-	return tile;
-}
-
-int Grid::calculateMovementCost(sf::Vector2i tile)
-{
-
-}
-
-void Grid::recalculateCosts()
-{
-	/*
-	//only recalc discovered
 	for (std::size_t x = 0; x < width; ++x)
 	{
 		for (std::size_t y = 0; y < height; ++y)
 		{
-			//tiles[x][y].textG.setString("");
-			//tiles[x][y].textH.setString("");
-			//tiles[x][y].textF.setString("");
+			if (tiles[x][y].type == Type::PATH)
+			{
+				tiles[x][y].type = Type::EMPTY;
+
+				tiles[x][y].quad[0].color = pickTileColor(Type::EMPTY);
+				tiles[x][y].quad[1].color = pickTileColor(Type::EMPTY);
+				tiles[x][y].quad[2].color = pickTileColor(Type::EMPTY);
+				tiles[x][y].quad[3].color = pickTileColor(Type::EMPTY);
+			}
 		}
 	}
-	*/
 
-	//tiles[startTilePosition.x][startTilePosition.y].textH.setString("H:" + std::to_string(heuristicManhattan(startTilePosition, finishTilePosition)));
+	pather = new micropather::MicroPather(this);
+
+	float totalCost = 0;
+	int result = pather->Solve(XYToNode(startTilePosition.x, startTilePosition.y), XYToNode(finishTilePosition.x, finishTilePosition.y), &path, &totalCost);
+
+	//if (result == micropather::MicroPather::SOLVED)
+	//	std::cout << "solved!" << std::endl;
+
+	for (int i = 0; i < path.size(); ++i)
+	{
+		int x, y;
+		NodeToXY(path[i], &x, &y);
+		if (i != 0 && i != path.size() - 1)
+		{
+			colorTile(sf::Vector2i(x, y), Type::PATH);
+		}
+	}
 }
 
-int Grid::calculateHeuristicManhattan(sf::Vector2i startTilePosition, sf::Vector2i finishTilePosition)
+int Grid::Passable(int nx, int ny)
 {
-	return abs(startTilePosition.x - finishTilePosition.x) + abs(startTilePosition.y - finishTilePosition.y);
+	if (nx >= 0 && nx < width &&
+		ny >= 0 && ny < height)
+	{
+		if (tiles[nx][ny].type != Type::OBSTACLE)
+			return 1;
+	}
+	return 0;
+}
+
+void Grid::NodeToXY(void* node, int* x, int* y)
+{
+	intptr_t index = (intptr_t)node;
+	*y = index / width;
+	*x = index - *y * width;
+}
+
+void* Grid::XYToNode(int x, int y)
+{
+	return (void*)(y*width + x);
+}
+
+float Grid::LeastCostEstimate(void* nodeStart, void* nodeEnd)
+{
+	int xStart, yStart, xEnd, yEnd;
+	NodeToXY(nodeStart, &xStart, &yStart);
+	NodeToXY(nodeEnd, &xEnd, &yEnd);
+
+	/* Compute the minimum path cost using distance measurement. It is possible
+	to compute the exact minimum path using the fact that you can move only
+	on a straight line or on a diagonal, and this will yield a better result.
+	*/
+	int dx = xStart - xEnd;
+	int dy = yStart - yEnd;
+	return (float)sqrt((double)(dx*dx) + (double)(dy*dy));
+}
+
+void Grid::AdjacentCost(void* node, micropather::MPVector<micropather::StateCost>* neighbors)
+{
+	int x, y;
+	const int dx[8] = { 1, 1, 0, -1, -1, -1, 0, 1 };
+	const int dy[8] = { 0, 1, 1, 1, 0, -1, -1, -1 };
+	const float cost[8] = { 1.0f, 1.41f, 1.0f, 1.41f, 1.0f, 1.41f, 1.0f, 1.41f };
+
+	NodeToXY(node, &x, &y);
+
+	for (int i = 0; i < 8; ++i) {
+		int nx = x + dx[i];
+		int ny = y + dy[i];
+
+		int pass = Passable(nx, ny);
+		if (pass > 0) {
+			if (pass == 1)
+			{
+				// Normal floor
+				micropather::StateCost nodeCost = { XYToNode(nx, ny), cost[i] };
+				neighbors->push_back(nodeCost);
+			}
+			else
+			{
+				// Normal floor
+				micropather::StateCost nodeCost = { XYToNode(nx, ny), FLT_MAX };
+				neighbors->push_back(nodeCost);
+			}
+		}
+	}
+}
+
+void Grid::PrintStateInfo(void* node)
+{
 }

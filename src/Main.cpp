@@ -9,7 +9,7 @@ int main()
 
 	sf::RenderWindow window;
 	//windowSize.x + 1 to keep border lines
-	window.create(sf::VideoMode(windowSize.x + 1, windowSize.y + 1), "A* algorithm", sf::Style::Close | sf::Style::Titlebar);
+	window.create(sf::VideoMode(windowSize.x + 1, windowSize.y + 1), "A* SFML", sf::Style::Close | sf::Style::Titlebar);
 
 	//window.setFramerateLimit(60);
 	window.setKeyRepeatEnabled(true);
@@ -17,7 +17,7 @@ int main()
 
 	sf::Clock clock;
 
-	Grid grid(windowSize, 32, 32);
+	Grid grid(windowSize, 16, 16);
 
 	while (window.isOpen())
 	{
@@ -34,16 +34,18 @@ int main()
 						window.close();
 						break;
 					}
-					if (event.key.code == sf::Keyboard::R)
+					if (event.key.code == sf::Keyboard::Space)
 					{
 						grid.reset();
 						break;
 					}
+					/*
 					if (event.key.code == sf::Keyboard::S)
 					{
 						grid.startPathfinding();
 						break;
 					}
+					*/
 				case sf::Event::MouseButtonPressed: grid.onMouseButtonPressedRight(window);
 
 				default: break;
@@ -55,7 +57,7 @@ int main()
 			grid.onMouseButtonPressedLeft(window);
 		}
 
-		grid.recalculateCosts();
+		grid.startPathfinding();
 
 		sf::Time elapsed = clock.restart();
 		float dt = elapsed.asSeconds();
@@ -66,7 +68,7 @@ int main()
 
 		window.display();
 
-		window.setTitle("A* algorithm " + std::to_string(1.f / dt));
+		window.setTitle("A* SFML " + std::to_string(1.f / dt));
 	}
 
     return 0;
