@@ -263,17 +263,7 @@ void* Grid::XYToNode(int x, int y)
 
 float Grid::LeastCostEstimate(void* nodeStart, void* nodeEnd)
 {
-	int xStart, yStart, xEnd, yEnd;
-	NodeToXY(nodeStart, &xStart, &yStart);
-	NodeToXY(nodeEnd, &xEnd, &yEnd);
-
-	/* Compute the minimum path cost using distance measurement. It is possible
-	to compute the exact minimum path using the fact that you can move only
-	on a straight line or on a diagonal, and this will yield a better result.
-	*/
-	int dx = xStart - xEnd;
-	int dy = yStart - yEnd;
-	return (float)sqrt((double)(dx*dx) + (double)(dy*dy));
+	return 1.0;
 }
 
 void Grid::AdjacentCost(void* node, micropather::MPVector<micropather::StateCost>* neighbors)

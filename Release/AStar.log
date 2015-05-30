@@ -1,4 +1,4 @@
-﻿Build started 30.5.2015 02:43:34.
+﻿Build started 30.5.2015 10:14:24.
      1>Project "C:\Users\admin\Documents\GitHub\AStar\AStar.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\Users\admin\Documents\GitHub\AStar\\include /Zi /nologo /W3 /WX- /O2 /Ob2 /Oi /Ot /Oy- /GL /D SFML_STATIC /D WIN32 /D NDEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt src\Grid.cpp
@@ -12,13 +12,13 @@
      1>src\Grid.cpp(101): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
      1>src\Grid.cpp(157): warning C4018: '>=' : signed/unsigned mismatch
      1>src\Grid.cpp(226): warning C4018: '<' : signed/unsigned mismatch
-     1>src\Grid.cpp(242): warning C4018: '<' : signed/unsigned mismatch
-     1>src\Grid.cpp(243): warning C4018: '<' : signed/unsigned mismatch
-     1>src\Grid.cpp(299): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
-     1>src\Grid.cpp(308): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
-     1>src\Grid.cpp(317): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
-     1>src\Grid.cpp(326): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
-     1>src\Grid.cpp(333): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>src\Grid.cpp(246): warning C4018: '<' : signed/unsigned mismatch
+     1>src\Grid.cpp(247): warning C4018: '<' : signed/unsigned mismatch
+     1>src\Grid.cpp(293): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>src\Grid.cpp(302): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>src\Grid.cpp(311): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>src\Grid.cpp(320): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
+     1>src\Grid.cpp(327): warning C4244: 'initializing' : conversion from 'const int' to 'float', possible loss of data
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\admin\Documents\GitHub\AStar\Release\AStar.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:C:\Users\admin\Documents\GitHub\AStar\\lib "sfml-main.lib" "sfml-system-s.lib" winmm.lib "sfml-audio-s.lib" flac.lib ogg.lib vorbis.lib vorbisenc.lib vorbisfile.lib openal32.lib opengl32.lib gdi32.lib "sfml-graphics-s.lib" "sfml-window-s.lib" freetype.lib jpeg.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\admin\Documents\GitHub\AStar\Release\AStar.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\admin\Documents\GitHub\AStar\Release\AStar.lib" /MACHINE:X86 /SAFESEH Release\Grid.obj
          Release\Main.obj
@@ -31,4 +31,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.38
+Time Elapsed 00:00:01.36
