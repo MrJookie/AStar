@@ -167,8 +167,7 @@ void Grid::colorTile(sf::Vector2i tile, Type type)
 		finishTilePosition.x = tile.x;
 		finishTilePosition.y = tile.y;
 	}
-
-	if (tiles[tile.x][tile.y].type == Type::START)
+	else if (tiles[tile.x][tile.y].type == Type::START)
 	{
 		type = Type::EMPTY;
 		startTilePosition.x = 0;
@@ -233,19 +232,21 @@ void Grid::startPathfinding()
 			colorTile(sf::Vector2i(x, y), Type::PATH);
 		}
 	}
+
+	pather->Reset();
 }
 
-int Grid::Passable(int nx, int ny)
+bool Grid::Passable(int nx, int ny)
 {
 	//fix this
 	if (nx >= 0 && nx < width &&
-		ny >= 0 && ny < height && nx - 1 >= 0 && ny - 1 >= 0)
+		ny >= 0 && ny < height)
 	{
-		if (tiles[nx][ny].type != Type::OBSTACLE && tiles[nx - 1][ny].type != Type::OBSTACLE && tiles[nx][ny-1].type != Type::OBSTACLE)
-			return 1;
+		if (tiles[nx][ny].type != Type::OBSTACLE)
+			return true;
 	}
 
-	return 0;
+	return false;
 }
 
 void Grid::NodeToXY(void* node, int* x, int* y)
@@ -262,7 +263,17 @@ void* Grid::XYToNode(int x, int y)
 
 float Grid::LeastCostEstimate(void* nodeStart, void* nodeEnd)
 {
-	return 0.0;
+	int xStart, yStart, xEnd, yEnd;
+	NodeToXY(nodeStart, &xStart, &yStart);
+	NodeToXY(nodeEnd, &xEnd, &yEnd);
+
+	/* Compute the minimum path cost using distance measurement. It is possible
+	to compute the exact minimum path using the fact that you can move only
+	on a straight line or on a diagonal, and this will yield a better result.
+	*/
+	int dx = xStart - xEnd;
+	int dy = yStart - yEnd;
+	return (float)sqrt((double)(dx*dx) + (double)(dy*dy));
 }
 
 void Grid::AdjacentCost(void* node, micropather::MPVector<micropather::StateCost>* neighbors)
@@ -278,10 +289,52 @@ void Grid::AdjacentCost(void* node, micropather::MPVector<micropather::StateCost
 		int nx = x + dx[i];
 		int ny = y + dy[i];
 
-		int pass = Passable(nx, ny);
-		if (pass > 0) {
-			micropather::StateCost nodeCost = { XYToNode(nx, ny), cost[i] };
-			neighbors->push_back(nodeCost);
+		if (Passable(nx, ny)) {
+			switch (i)
+			{
+			case 1:
+				//std::cout << "diagonal down left" << std::endl;
+				if (Passable(nx - 1, ny) || Passable(nx, ny - 1))
+				{
+					micropather::StateCost nodeCost = { XYToNode(nx, ny), cost[i] };
+					neighbors->push_back(nodeCost);
+				}
+				break;
+
+			case 3:
+				//std::cout << "diagonal down left" << std::endl;
+				if (Passable(nx + 1, ny) || Passable(nx, ny - 1))
+				{
+					micropather::StateCost nodeCost = { XYToNode(nx, ny), cost[i] };
+					neighbors->push_back(nodeCost);
+				}
+				break;
+
+			case 5:
+				//std::cout << "diagonal up left" << std::endl;
+				if (Passable(nx + 1, ny) || Passable(nx, ny + 1))
+				{
+					micropather::StateCost nodeCost = { XYToNode(nx, ny), cost[i] };
+					neighbors->push_back(nodeCost);
+				}
+				break;
+
+			case 7:
+				//std::cout << "diagonal up right" << std::endl;
+				if (Passable(nx - 1, ny) || Passable(nx, ny + 1))
+				{
+					micropather::StateCost nodeCost = { XYToNode(nx, ny), cost[i] };
+					neighbors->push_back(nodeCost);
+				}
+				break;
+
+			default:
+				{
+					micropather::StateCost nodeCost = { XYToNode(nx, ny), cost[i] };
+					neighbors->push_back(nodeCost);
+				}
+				break;
+			}
 		}
 	}
 }

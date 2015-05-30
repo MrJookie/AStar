@@ -45,7 +45,7 @@ private:
 
 	micropather::MPVector<void*> path;
 	micropather::MicroPather* pather;
-	int Passable(int nx, int ny);
+	bool Passable(int nx, int ny);
 	void NodeToXY(void* node, int* x, int* y);
 	void* XYToNode(int x, int y);
 };
